@@ -1,0 +1,133 @@
+.menu-dropdown {
+  height: 0;
+  overflow: hidden;
+  transition: height 0.3s linear;
+}
+
+.avatar:hover .menu-dropdown {
+  height: 110px;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.notification-drop {
+  font-family: "Ubuntu", sans-serif;
+  color: #444;
+}
+.notification-drop .item {
+  padding: 10px;
+  font-size: 18px;
+  position: relative;
+  border-bottom: 1px solid #ddd;
+}
+.notification-drop .item:hover {
+  cursor: pointer;
+}
+.notification-drop .item i {
+  margin-left: 10px;
+}
+.notification-drop .item ul {
+  display: block;
+  position: absolute;
+  width: 500px;
+  top: 100%;
+  background: #fff;
+  left: -425px;
+  right: 0;
+  z-index: 1;
+  border-top: 1px solid #ddd;
+  max-height: 400px;
+  overflow-y: scroll;
+}
+.notification-drop .item ul li {
+  font-size: 14px;
+  padding: 15px 0 15px 15px;
+}
+.notification-drop .item ul li:hover {
+  background: #ddd;
+  color: rgba(0, 0, 0, 0.8);
+}
+
+@media screen and (min-width: 500px) {
+  .notification-drop {
+    display: flex;
+    justify-content: flex-end;
+  }
+  .notification-drop .item {
+    border: none;
+  }
+}
+
+.notification-bell {
+  font-size: 20px;
+}
+
+.btn__badge {
+  background: #ff5d5d;
+  color: white;
+  font-size: 12px;
+  position: absolute;
+  top: 0;
+  right: 0px;
+  padding: 3px 10px;
+  border-radius: 50%;
+}
+
+.pulse-button {
+  box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.5);
+  -webkit-animation: pulse 1.5s infinite;
+}
+
+.pulse-button:hover {
+  -webkit-animation: none;
+}
+
+.notification-text {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.notification-text span {
+  float: right;
+}
+
+.img-item {
+  width: 25px;
+  margin-right: 10px;
+}
+
+.unSeen{
+  background-color: #ccc;
+}
+
+.notify{
+  color: black;
+  border-radius: 5px;
+  border-style: solid;
+  border-color: #000;
+  border-width: thin;
+  margin-top: 2px;
+  margin-bottom: 2px;
+
+}
+
+.action {
+  display: flex;
+  justify-content: space-between;
+  max-height: 20px;
+  background-color: #fff !important;
+  margin-bottom: 10px;
+  cursor: default;
+}
+
+.buttonContainer {
+  flex: 1; /* Đảm bảo cả hai nút đều chiếm một phần bằng nhau */
+  text-align: center; /* Căn giữa nút bên trong */
+  cursor: pointer !important;
+}
+
+

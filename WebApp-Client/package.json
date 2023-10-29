@@ -1,0 +1,48 @@
+{
+  "name": "bidat",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "prettier": "prettier --check \"src/**/(*.tsx|*.ts|*.css)\"",
+    "prettier:fix": "prettier --write \"src/**/(*.tsx|*.ts|*.css)\"",
+    "format": "yarn prettier:fix && yarn lint"
+  },
+  "dependencies": {
+    "@tabler/icons": "^1.82.0",
+    "axios": "^0.27.2",
+    "babel-plugin-root-import": "^6.6.0",
+    "dayjs": "^1.11.5",
+    "html2canvas": "^1.4.1",
+    "next": "^12.2.4",
+    "query-string": "^7.1.1",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "react-hook-form": "^7.36.1",
+    "react-hot-toast": "^2.4.0",
+    "react-select": "^5.7.0",
+    "react-slick": "^0.29.0",
+    "react-star-ratings": "^2.3.0",
+    "react-sweet-state": "^2.6.5",
+    "slick-carousel": "^1.8.1",
+    "yarm": "^0.4.0"
+  },
+  "devDependencies": {
+    "@next/bundle-analyzer": "^12.2.4",
+    "@types/node": "^18.6.5",
+    "@types/react": "^18.0.17",
+    "@types/react-slick": "^0.23.10",
+    "@typescript-eslint/eslint-plugin": "^5.33.0",
+    "@typescript-eslint/parser": "^5.33.0",
+    "autoprefixer": "^10.4.8",
+    "eslint": "8.21.0",
+    "eslint-config-next": "12.2.4",
+    "eslint-config-prettier": "^8.5.0",
+    "postcss": "^8.4.16",
+    "prettier": "^2.7.1",
+    "tailwindcss": "^3.1.8",
+    "typescript": "^4.7.4"
+  }
+}

@@ -1,0 +1,97 @@
+.transactionWrapper {
+  background: linear-gradient(120deg, #2980b9, #8e44ad);
+  height: 100vh;
+  overflow: hidden;
+  box-sizing: border-box;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.transactionContainer {
+  width: 50%;
+  height: 80%;
+  border-radius: 10px;
+  background-color: white;
+  background-image: url("https://cdn.dribbble.com/users/614270/screenshots/14575431/media/4907a0869e9ed2ac4e2d1c2beaf9f012.gif");
+  background-position: center;
+  background-size: cover;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.transactionHeader {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  background-color: #d9e4f5;
+  background-image: linear-gradient(315deg, #d9e4f5 0%, #f5e3e6 74%);
+}
+
+.transactionBody {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 60%;
+  flex-direction: column;
+}
+.btnTransaction {
+  background-color: green;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
+    rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
+    rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+  color: white;
+  padding: 5px 10px;
+
+  border-radius: 6px;
+  margin-top: 5px
+}
+.transactionBody p:first-child {
+  font-style: oblique;
+}
+.transactionBody p:nth-child(2) {
+  font-size: larger;
+  margin-top: unset;
+}
+
+@media only screen and (max-width: 46.1875em) {
+  .transactionContainer {
+    width: 70%;
+    height: 60%;
+    border-radius: 10px;
+    background-color: white;
+    background-image: url("https://cdn.dribbble.com/users/614270/screenshots/14575431/media/4907a0869e9ed2ac4e2d1c2beaf9f012.gif");
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  }
+  .transactionBody {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 80%;
+    flex-direction: column;
+  }
+  .btnTransaction {
+    background-color: green;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
+      rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
+      rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+    color: white;
+  }
+  .transactionBody p:first-child {
+    font-style: oblique;
+  }
+  .transactionBody p:nth-child(2) {
+    font-size: larger;
+    margin-top: unset;
+  }
+}
