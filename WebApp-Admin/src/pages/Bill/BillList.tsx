@@ -44,12 +44,14 @@ function BillList(props: Props) {
 
   const handleSelect = (e: any) => {
     // console.log(e.target.value);
+    setCurrentPage(0);
     (async () => {
       const resultStatus = await billApi.getStatuslBill(
         `?status=${e.target.value}`
       );
       // console.log(resultStatus);
       setBillList(resultStatus.data.reverse());
+      setTotal(resultStatus.count)
       // if(resultStatus.statusCode === 200) {
       // }
     })();
