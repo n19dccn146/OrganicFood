@@ -526,7 +526,8 @@ const ValidCart = async (req, res, next) => {
         color: unit.color,
         colorIndex,
         image_url: doc_color.image_url,
-        quantity: unit.quantity
+        quantity: unit.quantity,
+        qtyInStock: doc_color.quantity
       });
       count += unit.quantity;
     }

@@ -26,6 +26,7 @@ const CartPage = (props: any) => {
 };
 
 const CartSection = (props) => {
+  debugger
   const { userCartData } = props;
   const [cart, setCart] = React.useState([]);
   const [{ signedIn }] = useAuth();
@@ -61,7 +62,12 @@ const CartSection = (props) => {
 
   const handleChangeQuantity = React.useCallback(
     ({ product, color, quantity = 1 }) => {
+      debugger
       const item = cart.find((e) => e.product === product && e.color === color);
+      if(item.quantity >= item.qtyInStock && quantity != -1){
+        toast.error(`Số lượng sản phẩm chỉ còn ${item.qytInStock}`);
+        return;
+      }
       const preCount = item.quantity + quantity;
       if (preCount < 1) return;
 
