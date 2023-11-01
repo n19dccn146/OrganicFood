@@ -6,6 +6,7 @@ import categoryApi from "../../../apis/category/categoryApi";
 import { notifyError, notifySuccess } from "../../../utils/notify";
 import Specs from "./specs";
 import supplierApi from "../../../apis/supplier/supplierApi";
+import { ToastContainer, toast } from "react-toastify";
 
 export default function ModalCreateCategory({
   setOpenModalCreateCategory,
@@ -31,6 +32,16 @@ export default function ModalCreateCategory({
       console.log("Error: ", error);
     };
   };
+  const getFileExtension=(ext:any)=>
+  {
+    let lastDotIndex = ext.lastIndexOf(".");
+    if (lastDotIndex != -1) {
+        let fileExtension = ext.substring(lastDotIndex);
+        return fileExtension;
+    } else {
+        return '';
+    }
+  }
 
   const {
     register,
@@ -83,12 +94,13 @@ export default function ModalCreateCategory({
     };
 
     const result = await categoryApi.createCategory(payload);
+    debugger
     if (result.statusCode === 200) {
       notifySuccess("Success");
       setReload((ref: number) => ref + 1);
       reset();
       setOpenModalCreateCategory(false);
-    } else notifyError("Fail");
+    } else notifyError(result?.response?.data?.message ? result.response.data.message : (result?.message ? result.message :"Fail !"));
   };
 
   useEffect(() => {
@@ -129,6 +141,17 @@ export default function ModalCreateCategory({
                       accept=".png, .jpg"
                       beforeUpload={(file: any) => {
                         getBase64(file, (result: any) => {
+                          if(getFileExtension(file.name)!='.png' && getFileExtension(file.name)!='.jpg'){
+                            toast.error("Vui lòng chọn file jpg hoặc png!", {
+                              position: "top-center",
+                              autoClose: 1000,
+                              closeOnClick: true,
+                              pauseOnHover: true,
+                              draggable: true,
+                            });
+                            return;
+                          }
+                       
                           const base64 = result.split(",");
                           setImagesBase64(base64[1]);
                         });
@@ -150,6 +173,16 @@ export default function ModalCreateCategory({
                       accept=".png, .jpg"
                       beforeUpload={(file: any) => {
                         getBase64(file, (result: any) => {
+                          if(getFileExtension(file.name)!='.png' && getFileExtension(file.name)!='.jpg'){
+                            toast.error("Vui lòng chọn file jpg hoặc png!", {
+                              position: "top-center",
+                              autoClose: 1000,
+                              closeOnClick: true,
+                              pauseOnHover: true,
+                              draggable: true,
+                            });
+                            return;
+                          }
                           const base64 = result.split(",");
                           setIconBase64(base64[1]);
                         });

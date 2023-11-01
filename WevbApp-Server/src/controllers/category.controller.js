@@ -132,7 +132,22 @@ const createCategory = catchAsync(async (req, res, next) => {
     var img_info = await image.upload(image.base64(image_base64), 'category');
     var icon_info = await image.upload(image.base64(icon_base64), 'category');
     if (!img_info) return responseError({ res, statusCode: 500, message: config.message.errSaveImage });
-
+    let tmp = await Category.find({name:name})
+    if (tmp?.length>0){
+      return responseError({
+        res,
+        statusCode: 500,
+        message:"Tên này đã tồn tại !!"
+      })
+    }
+    tmp = await Category.find({slug:slug})
+    if (tmp?.length>0){
+      return responseError({
+        res,
+        statusCode:500,
+        message:"Slug này đã tồn tại !!"
+      })
+    }
     //Tạo danh mục
     // Try to save category
     const category = new Category({
@@ -238,12 +253,26 @@ const updateCategory = catchAsync(async (req, res, next) => {
         {slug:slug},
         {_id:{$ne:category?._id}}
       ]})
+      if(tmp?.length>0){
+        return res.status(404).json({
+          success: false,
+          msg:"Slug này đã tồn tại !"
+        })
+      }
     }
-    if(tmp?.length>0){
-      return res.status(404).json({
-        success: false,
-        msg:"Slug này đã tồn tại !"
+    if(!!name) {
+      tmp = await Category.find({
+        $and:[
+          {name:name},
+          {_id:{$ne:category?._id}}
+        ]
       })
+      if(tmp?.length>0){
+        return res.status(404).json({
+          success: false,
+          msg:"Tên này đã tồn tại !"
+        })
+      }
     }
     if (!category) return res.status(400).send({ msg: config.message.err400 });
 

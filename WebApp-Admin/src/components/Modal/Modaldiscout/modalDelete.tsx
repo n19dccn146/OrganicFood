@@ -17,7 +17,7 @@ export default function ModalDelete({
       console.log("status", result.statusCode);
 
       if (result.msg === "Thành công ") {
-        notifySuccess("Update Success");
+        notifySuccess("Xóa Thành Công !");
         reload((ref: number) => ref + 1);
         setOpenModalDeleteDiscount(false);
       } else {
