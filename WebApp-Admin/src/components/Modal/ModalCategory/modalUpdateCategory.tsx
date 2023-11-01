@@ -90,13 +90,14 @@ export default function ModalUpdateCategory({
 
     const result = await categoryApi.editCategory(payload);
     console.log("payload", payload);
+    debugger
     console.log(result);
     if (result.msg === "Thành công ") {
-      notifySuccess("Success");
+      notifySuccess(result.msg);
       setReload((ref: number) => ref + 1);
       setOpenModalUpdateCategory(false);
       reset();
-    } else notifyError("Fail");
+    } else notifyError(result?.response?.data?.msg ? result.response.data.msg :(result?.msg ? result.msg : "Fail"));
   };
 
   function toDataUrl(url: any, callback: any) {

@@ -224,12 +224,27 @@ const updateCategory = catchAsync(async (req, res, next) => {
     const name = req.body.name;
     const image_base64 = req.body.image_base64;
     const icon_base64 = req.body.icon_base64;
+    const slug = req.body.slug;
     var specsModel = req.body.specsModel;
 
     if (!_id || (!name && !image_base64 && !specsModel && !icon_base64))
       return res.status(400).send({ msg: config.message.err400 });
 
     var category = await Category.findById(_id);
+    
+    var tmp
+    if(!!slug){
+      tmp= await Category.find({$and:[
+        {slug:slug},
+        {_id:{$ne:category?._id}}
+      ]})
+    }
+    if(tmp?.length>0){
+      return res.status(404).json({
+        success: false,
+        msg:"Slug này đã tồn tại !"
+      })
+    }
     if (!category) return res.status(400).send({ msg: config.message.err400 });
 
     var msg = '';
@@ -278,12 +293,16 @@ const updateCategory = catchAsync(async (req, res, next) => {
 
         if (!!name && !(await Category.findOne({ _id: { $ne: _id }, name }))) {
           category.name = name;
+          category.save();
           for (let i = 0; i < category.products.length; i++) {
-            if (!(await Product.findByIdAndUpdate(category.products[i], { category: name }, opts).exec())) {
-              console.log(category.products[i]);
-              throw Error();
+            try{
+              await Product.findByIdAndUpdate(category.products[i], { category: name }, opts).exec()
+            }catch(e){
+              console.log(e)
             }
+
           }
+
         }
         if (!!specsModel) {
           console.log('Save');
@@ -294,7 +313,7 @@ const updateCategory = catchAsync(async (req, res, next) => {
         }
         await session.commitTransaction();
         session.endSession();
-        res.send({ msg: config.message.success });
+        return res.send({ msg: config.message.success });
         RequestCategory();
       } catch (error) {
         console.log(error);

@@ -13,11 +13,13 @@ export default function ModalHistoryPrice({
   const [historyList, setHistoryList] = useState<Array<any>>([]);
   useEffect(() => {
     (async () => {
+      debugger
       const payload = {
         code: code,
       };
       console.log(payload);
       const result = await productApi.getListHistoryPriceById(payload);
+      const tmpList = result.data.filter((i:any)=>i?.admin)
       setHistoryList(result.data);
       // console.log(result);
     })();
