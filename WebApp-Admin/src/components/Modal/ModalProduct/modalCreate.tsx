@@ -7,6 +7,7 @@ import productApi from "../../../apis/product/product";
 import { notifyError, notifySuccess } from "../../../utils/notify";
 import supplierApi from "../../../apis/supplier/supplierApi";
 import authApi from "../../../apis/auth/authApi";
+import { ToastContainer, toast } from "react-toastify";
 
 export default function ModalCreate({ setOpenModal, setReload }: any) {
   type FormValues = {
@@ -36,6 +37,7 @@ export default function ModalCreate({ setOpenModal, setReload }: any) {
   } = useForm<FormValues>({});
 
   const getBase64 = (file: any, cb: any) => {
+    debugger
     let reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = function () {
@@ -46,6 +48,19 @@ export default function ModalCreate({ setOpenModal, setReload }: any) {
     };
   };
 
+
+  const getFileExtension=(ext:any)=>
+  {
+    let lastDotIndex = ext.lastIndexOf(".");
+
+    if (lastDotIndex != -1) {
+        let fileExtension = ext.substring(lastDotIndex);
+        return fileExtension;
+    } else {
+        return '';
+    }
+  }
+  
   const handleSelectCat = (e: any) => {
     if (e.target.value !== "Select") {
       setSelectCategory(e.target.value);
@@ -226,19 +241,32 @@ export default function ModalCreate({ setOpenModal, setReload }: any) {
                     </div>
                     <Upload.Dragger
                       maxCount={1}
+                      beforeUpload={(file: any) => {
+                        getBase64(file, (result: any) => {
+                          if(getFileExtension(file.name)!='.png' && getFileExtension(file.name)!='.jpg'){
+                            toast.error("Vui lòng chọn file jpg hoặc png!", {
+                              position: "top-center",
+                              autoClose: 1000,
+                              closeOnClick: true,
+                              pauseOnHover: true,
+                              draggable: true,
+                            });
+                            return;
+                          }
+                          const base64 = result.split(",");
+                          setImagesBase64(base64[1]); 
+                        });
+                        return false;
+                      }}
+                      
                       listType="picture-card"
                       showUploadList={{
                         showRemoveIcon: true,
                         showPreviewIcon: false,
                       }}
                       accept=".png, .jpg"
-                      beforeUpload={(file: any) => {
-                        getBase64(file, (result: any) => {
-                          const base64 = result.split(",");
-                          setImagesBase64(base64[1]);
-                        });
-                        return false;
-                      }}
+
+                  
                     >
                       <Button>Upload file</Button>
                     </Upload.Dragger>

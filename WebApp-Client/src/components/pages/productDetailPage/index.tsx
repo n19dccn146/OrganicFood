@@ -28,7 +28,7 @@ import styles from './style.module.css';
 //     at: '',
 //   },
 // ];
-
+let tmpProduct:any =null;
 const ProductDetailPage = (props: any) => {
   const { product, comments: productComments = [] } = props;
   const {
@@ -44,6 +44,7 @@ const ProductDetailPage = (props: any) => {
     enable = true,
     specs = {},
   } = product;
+  tmpProduct = product
   const [currentColor, setCurrentColor] = React.useState<any>(colors?.[0]);
   const [quantity, setQuantity] = React.useState<number>(1);
   const { addToCart } = useCartHook();
@@ -410,6 +411,10 @@ const QuantityPicker = ({
   setQuantity: any;
 }) => {
   const handleIncrease = () => {
+    if (quantity == tmpProduct.colors[0].quantity){
+      toast.error(`Số lượng sản phẩm chỉ còn ${tmpProduct.colors[0].quantity}`);
+      return;
+    }
     if (quantity === 10) return;
     console.log(quantity);
     setQuantity(quantity + 1);
@@ -421,6 +426,10 @@ const QuantityPicker = ({
   };
 
   const handleChange = (e) => {
+    if (parseInt(e.target.value)>0 &&parseInt(e.target.value)> tmpProduct.colors[0].quantity){
+      toast.error(`Số lượng sản phẩm chỉ còn ${tmpProduct.colors[0].quantity}`);
+      return;
+    }
     setQuantity(parseInt(e.target.value));
   };
 
