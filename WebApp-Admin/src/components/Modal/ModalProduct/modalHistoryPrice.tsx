@@ -19,8 +19,8 @@ export default function ModalHistoryPrice({
       };
       console.log(payload);
       const result = await productApi.getListHistoryPriceById(payload);
-      const tmpList = result.data.filter((i:any)=>i?.admin)
-      setHistoryList(result.data);
+      const tmpList = result.data.filter((i:any)=>!!i?.admin && !!i.new_price)
+      setHistoryList(tmpList);
       // console.log(result);
     })();
   }, []);
