@@ -90,14 +90,21 @@ export default function ModalUpdateCategory({
 
     const result = await categoryApi.editCategory(payload);
     console.log("payload", payload);
-    debugger
+    debugger;
     console.log(result);
     if (result.msg === "Thành công ") {
       notifySuccess(result.msg);
       setReload((ref: number) => ref + 1);
       setOpenModalUpdateCategory(false);
       reset();
-    } else notifyError(result?.response?.data?.msg ? result.response.data.msg :(result?.msg ? result.msg : "Fail"));
+    } else
+      notifyError(
+        result?.response?.data?.msg
+          ? result.response.data.msg
+          : result?.msg
+          ? result.msg
+          : "Fail"
+      );
   };
 
   function toDataUrl(url: any, callback: any) {
@@ -120,7 +127,7 @@ export default function ModalUpdateCategory({
       //   console.log('123',result);
       setCategory(result.data);
       console.log(result.data);
-      toDataUrl(result.data.image_url, function (res: any) {
+      toDataUrl(result.data?.image_url, function (res: any) {
         const base64 = res.split(",");
         setImagesBase64(base64[1]);
       });
@@ -167,7 +174,7 @@ export default function ModalUpdateCategory({
                       <Button>Upload Img</Button>
                     </Upload.Dragger>
                     <img
-                      src={category.image_url}
+                      src={category?.image_url}
                       alt=""
                       className="w-[105px] h-[100px] object-contain"
                     />
@@ -193,7 +200,7 @@ export default function ModalUpdateCategory({
                       <Button>Upload Icon</Button>
                     </Upload.Dragger>
                     <img
-                      src={category.icon_url}
+                      src={category?.icon_url}
                       alt=""
                       className="w-[105px] h-[100px] object-contain"
                     />
