@@ -65,7 +65,7 @@ const CartSection = (props) => {
       debugger
       const item = cart.find((e) => e.product === product && e.color === color);
       if(item.quantity >= item.qtyInStock && quantity != -1){
-        toast.error(`Số lượng sản phẩm chỉ còn ${item.qytInStock}`);
+        toast.error(`Số lượng sản phẩm chỉ còn ${item.qtyInStock}`);
         return;
       }
       const preCount = item.quantity + quantity;
