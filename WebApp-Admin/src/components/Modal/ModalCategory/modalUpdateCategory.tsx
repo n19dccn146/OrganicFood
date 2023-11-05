@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import categoryApi from "../../../apis/category/categoryApi";
 import { notifyError, notifySuccess } from "../../../utils/notify";
 import Specs from "./specs";
+import { ToastContainer, toast } from "react-toastify";
 
 export default function ModalUpdateCategory({
   setOpenModalUpdateCategory,
@@ -121,6 +122,18 @@ export default function ModalUpdateCategory({
     xhr.send();
   }
 
+  const getFileExtension=(ext:any)=>
+  {
+    let lastDotIndex = ext.lastIndexOf(".");
+
+    if (lastDotIndex != -1) {
+        let fileExtension = ext.substring(lastDotIndex);
+        return fileExtension;
+    } else {
+        return '';
+    }
+  }
+
   useEffect(() => {
     (async () => {
       const result = await categoryApi.getSelectCategory(_id);
@@ -165,6 +178,16 @@ export default function ModalUpdateCategory({
                       accept=".png, .jpg"
                       beforeUpload={(file: any) => {
                         getBase64(file, (result: any) => {
+                          if(getFileExtension(file.name)!='.png' && getFileExtension(file.name)!='.jpg'){
+                            toast.error("Vui lòng chọn file jpg hoặc png!", {
+                              position: "top-center",
+                              autoClose: 1000,
+                              closeOnClick: true,
+                              pauseOnHover: true,
+                              draggable: true,
+                            });
+                            return;
+                          }
                           const base64 = result.split(",");
                           setImagesBase64(base64[1]);
                         });
@@ -191,6 +214,16 @@ export default function ModalUpdateCategory({
                       accept=".png, .jpg"
                       beforeUpload={(file: any) => {
                         getBase64(file, (result: any) => {
+                          if(getFileExtension(file.name)!='.png' && getFileExtension(file.name)!='.jpg'){
+                            toast.error("Vui lòng chọn file jpg hoặc png!", {
+                              position: "top-center",
+                              autoClose: 1000,
+                              closeOnClick: true,
+                              pauseOnHover: true,
+                              draggable: true,
+                            });
+                            return;
+                          }
                           const base64 = result.split(",");
                           setIconBase64(base64[1]);
                         });

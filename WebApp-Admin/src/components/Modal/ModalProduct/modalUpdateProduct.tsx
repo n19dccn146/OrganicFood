@@ -7,6 +7,7 @@ import productApi from "../../../apis/product/product";
 import { notifyError, notifySuccess } from "../../../utils/notify";
 import authApi from "../../../apis/auth/authApi";
 import supplierApi from "../../../apis/supplier/supplierApi";
+import { ToastContainer, toast } from "react-toastify";
 
 export default function ModalUpdateProduct({
   setOpenModalUpdateProduct,
@@ -97,6 +98,17 @@ export default function ModalUpdateProduct({
     xhr.open("GET", url);
     xhr.responseType = "blob";
     xhr.send();
+  }
+  const getFileExtension=(ext:any)=>
+  {
+    let lastDotIndex = ext.lastIndexOf(".");
+
+    if (lastDotIndex != -1) {
+        let fileExtension = ext.substring(lastDotIndex);
+        return fileExtension;
+    } else {
+        return '';
+    }
   }
 
   useEffect(() => {
@@ -250,6 +262,16 @@ export default function ModalUpdateProduct({
                       accept=".png, .jpg"
                       beforeUpload={(file: any) => {
                         getBase64(file, (result: any) => {
+                          if(getFileExtension(file.name)!='.png' && getFileExtension(file.name)!='.jpg'){
+                            toast.error("Vui lòng chọn file jpg hoặc png!", {
+                              position: "top-center",
+                              autoClose: 1000,
+                              closeOnClick: true,
+                              pauseOnHover: true,
+                              draggable: true,
+                            });
+                            return;
+                          }
                           const base64 = result.split(",");
                           setImagesBase64(base64[1]);
                         });
