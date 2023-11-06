@@ -233,7 +233,7 @@ const quantityNotification = 10;
 //   }
 // };
 const processBills = async (model, option, step_time) => {
-  const bills = await model.find(option).sort({"createdAt":1}).exec();
+  const bills = await model.find(option).sort({ createdAt: 1 }).exec();
   console.log('------------------------' + bills);
 
   const counter = {};
@@ -362,8 +362,8 @@ const Revenue = async (req, res, next) => {
   }
 };
 
-const statistic = async (req,res)=>{
-  try{
+const statistic = async (req, res) => {
+  try {
     const dateStartStr = req.body.dateStart;
     const dateEndStr = req.body.dateEnd;
     let step = req.body.step;
@@ -372,126 +372,125 @@ const statistic = async (req,res)=>{
     type = ['bill', 'import'].includes(type) ? type : 'bill';
     var listProduct = [];
     var tempListProduct = [];
-    
+
     const dateStart = dateStartStr ? new Date(dateStartStr) : new Date(1970, 1, 1);
     const dateEnd = dateEndStr ? new Date(dateEndStr) : new Date();
 
-    const products = await Product.find({})
+    const products = await Product.find({});
     const step_time =
-    step === 'year' ? config.yearlong : step === 'month' ? config.monthlong : step === 'day' ? config.daylong : 1;
+      step === 'year' ? config.yearlong : step === 'month' ? config.monthlong : step === 'day' ? config.daylong : 1;
 
     const tempModel = type === 'bill' ? Bill : Import;
-    const option = type === 'bill'
-      ? { createdAt: { $gt: dateStart, $lt: dateEnd }, 'status.0.statusTimeline': { $in: ['Done'] } }
-      : { createdAt: { $gt: dateStart, $lt: dateEnd } };
+    const option =
+      type === 'bill'
+        ? { createdAt: { $gt: dateStart, $lt: dateEnd }, 'status.0.statusTimeline': { $in: ['Done'] } }
+        : { createdAt: { $gt: dateStart, $lt: dateEnd } };
     const { counter: counter1, graph: tempGraph } = await processBills(tempModel, option, step_time);
-    if(type === 'bill'){
-      for (let product of products){
+    if (type === 'bill') {
+      for (let product of products) {
         const listBill = await Bill.find({
-          $and:[
-            {"products.product":product._id},
-            {"createdAt":{$gte:dateStart}},
-            {"createdAt":{$lte:dateEnd}},
-            {"status.statusTimeline":"Done"}
+          $and: [
+            { 'products.product': product._id },
+            { createdAt: { $gte: dateStart } },
+            { createdAt: { $lte: dateEnd } },
+            { 'status.statusTimeline': 'Done' }
           ]
-        })
-        let sold = 0
-        let total = 0
-        let imports = 0 
-  
-        for(let bill of listBill){
-          for(let pd of bill.products){
-            if(product._id.equals(pd.product)){
-              total += pd.quantity*pd.price -pd.quantity*pd.price*pd.sale/100
-              total -= ((pd.quantity*pd.price)/bill.total)*bill.discountPrice
-              for(let ip of pd.imports){
-                imports += ip.price*ip.quantity
-                sold += ip.quantity
+        });
+        let sold = 0;
+        let total = 0;
+        let imports = 0;
+
+        for (let bill of listBill) {
+          for (let pd of bill.products) {
+            if (product._id.equals(pd.product)) {
+              total += pd.quantity * pd.price - (pd.quantity * pd.price * pd.sale) / 100;
+              total -= ((pd.quantity * pd.price) / bill.total) * bill.discountPrice;
+              for (let ip of pd.imports) {
+                imports += ip.price * ip.quantity;
+                sold += ip.quantity;
               }
               break;
             }
           }
         }
-        if(sold >0){
+        if (sold > 0) {
           listProduct.push({
-            _id:product._id,
-            name:product.name,
+            _id: product._id,
+            name: product.name,
             code: product.code,
             image_url: product.image_url,
-            quantity: product.quantity,//con lai trong kho
-            sold:sold,//da ban
-            total: total,//tong gia ban
-          })
+            quantity: product.quantity, //con lai trong kho
+            sold: sold, //da ban
+            total: total //tong gia ban
+          });
         }
-        if(imports>0){
+        if (imports > 0) {
           tempListProduct.push({
-            _id:product._id,
-            name:product.name,
+            _id: product._id,
+            name: product.name,
             code: product.code,
             image_url: product.image_url,
-            quantity: product.quantity,//con lai trong kho
-            sold:sold,//da ban
-            total: imports,//tong gia nhap
-          })
+            quantity: product.quantity, //con lai trong kho
+            sold: sold, //da ban
+            total: imports //tong gia nhap
+          });
         }
-        
-        
-      } 
-    }else {
-      for (let product of products){
+      }
+    } else {
+      for (let product of products) {
         const listImport = await Import.find({
-          $and:[
-            {"products.product":product._id},
-            {"createdAt":{$gte:dateStart}},
-            {"createdAt":{$lte:dateEnd}}
+          $and: [
+            { 'products.product': product._id },
+            { createdAt: { $gte: dateStart } },
+            { createdAt: { $lte: dateEnd } }
           ]
-        })
-        let quantity = 0
-        let total = 0
-        let totalSold = 0
-        let sold =0;
-        for (let ip of listImport){
-          quantity += ip.products[0].quantity
-          total += ip.products[0].quantity*ip.products[0].price
+        });
+        let quantity = 0;
+        let total = 0;
+        let totalSold = 0;
+        let sold = 0;
+        for (let ip of listImport) {
+          quantity += ip.products[0].quantity;
+          total += ip.products[0].quantity * ip.products[0].price;
         }
-        if (quantity>0){
+        if (quantity > 0) {
           listProduct.push({
-            _id:product._id,
-            name:product.name,
+            _id: product._id,
+            name: product.name,
             code: product.code,
             image_url: product.image_url,
-            quantity:product.quantity,
-            sold:quantity,
-            total,
-          })
+            quantity: product.quantity,
+            sold: quantity,
+            total
+          });
         }
         const listBill = await Bill.find({
-          $and:[
-            {"products.product":product._id},
-            {"createdAt":{$gte:dateStart}},
-            {"createdAt":{$lte:dateEnd}},
-            {"status.statusTimeline":"Done"}
+          $and: [
+            { 'products.product': product._id },
+            { createdAt: { $gte: dateStart } },
+            { createdAt: { $lte: dateEnd } },
+            { 'status.statusTimeline': 'Done' }
           ]
-        })
-        for(let bill of listBill){
-          for(let pd of bill.products){
-            if(product._id.equals(pd.product) ){
-                sold+=pd.quantity
-                totalSold += pd.quantity*pd.price - pd.quantity*pd.price*pd.sale/100
-                totalSold -= ((pd.quantity*pd.price)/bill.total)*bill.discountPrice
+        });
+        for (let bill of listBill) {
+          for (let pd of bill.products) {
+            if (product._id.equals(pd.product)) {
+              sold += pd.quantity;
+              totalSold += pd.quantity * pd.price - (pd.quantity * pd.price * pd.sale) / 100;
+              totalSold -= ((pd.quantity * pd.price) / bill.total) * bill.discountPrice;
             }
           }
         }
-        if(sold>0){
+        if (sold > 0) {
           tempListProduct.push({
-            _id:product._id,
-            name:product.name,
+            _id: product._id,
+            name: product.name,
             code: product.code,
             image_url: product.image_url,
-            quantity: product.quantity,//con lai trong kho
-            sold:sold,//da ban
-            total: totalSold,//tong gia nhap
-          })
+            quantity: product.quantity, //con lai trong kho
+            sold: sold, //da ban
+            total: totalSold //tong gia nhap
+          });
         }
       }
     }
@@ -499,14 +498,13 @@ const statistic = async (req,res)=>{
     return responseSuccess({
       res,
       message: config.message.success,
-      data: {listProduct,tempGraph,tempListProduct }
+      data: { listProduct, tempGraph, tempListProduct }
     });
-
-  }catch (err) {
-    console.log(err)
+  } catch (err) {
+    console.log(err);
     return res.status(500).send({ msg: config.message.err500 });
   }
-}
+};
 
 // const calculateProfitLoss = async (req, res, next) => {
 //   console.log('==================><');
@@ -893,7 +891,7 @@ const Phoneformat = (phone) => {
   return phone;
 };
 
-const  Create = async (req, res, next) => {
+const Create = async (req, res, next) => {
   console.log('create');
   try {
     const discountCode = req.body.discountCode;
@@ -908,7 +906,7 @@ const  Create = async (req, res, next) => {
     var verify = false;
 
     console.log(phone);
-    console.log("TMP:",cartItems)
+    console.log('TMP:', cartItems);
     if (!cartItems || cartItems.length == 0)
       return res.status(400).send({ status: 400, msg: 'Giỏ hàng rỗng. ' + warning });
     if (cod == undefined) return res.status(400).send({ status: 400, msg: 'Mời chọn phương thức thanh toán' });
@@ -951,70 +949,76 @@ const  Create = async (req, res, next) => {
     reduce += result_discount.value;
     warning += result_discount.error;
     const discount = result_discount.doc;
-    
+
     if (!!warning) return res.status(400).send({ status: 400, msg: warning });
 
     const products = [];
-    await cartItems.forEach(async (i) =>{
+    await cartItems.forEach(async (i) => {
       let imports = [];
       let quantity = i.quantity;
-      for ( let ip of i.listImports){
-        let ipQuantity= ip?._doc?.products[0]?._doc?.quantity
-        let ipSold= ip?._doc?.products[0]?._doc?.sold
-        if (ip?._doc?.products[0]?._doc?.quantity - ip?._doc?.products[0]?._doc?.sold >= quantity){
+      for (let ip of i.listImports) {
+        let ipQuantity = ip?._doc?.products[0]?._doc?.quantity;
+        let ipSold = ip?._doc?.products[0]?._doc?.sold;
+        if (ip?._doc?.products[0]?._doc?.quantity - ip?._doc?.products[0]?._doc?.sold >= quantity) {
           imports.push({
-            quantity : quantity,
-            price : ip?._doc?.products[0]?._doc?.price
-          });
-          let soldOut = false;
-          let sold =  ip?._doc?.products[0]?._doc?.sold + quantity
-          if(sold == ip?._doc?.products[0]?._doc?.quantity) soldOut =true;
-          Import.findOneAndUpdate(
-            {_id:ip?._id},
-            {
-              $set:
-              {
-              'products.0.soldOut':soldOut,
-              'products.0.sold':sold
-              }
-            },
-            { new: true },(err, updatedImport) => {
-              if (err) {
-                console.error(err);
-              } else {
-                console.log(updatedImport);
-              }
-            }
-          )
-          break;
-        }else{
-          imports.push({
-            quantity : (ip?._doc?.products[0]?._doc?.quantity - ip?._doc?.products[0]?._doc?.sold),
+            quantity: quantity,
             price: ip?._doc?.products[0]?._doc?.price
           });
-          quantity -= (ip?._doc?.products[0]?._doc?.quantity - ip?._doc?.products[0]?._doc?.sold);
+          let soldOut = false;
+          let sold = ip?._doc?.products[0]?._doc?.sold + quantity;
+          if (sold == ip?._doc?.products[0]?._doc?.quantity) soldOut = true;
           Import.findOneAndUpdate(
-            {_id:ip?._id},
+            { _id: ip?._id },
             {
-              $set:
-              {
-              'products.0.soldOut':true,
-              'products.0.sold':ip?._doc?.products[0]?._doc?.quantity
+              $set: {
+                'products.0.soldOut': soldOut,
+                'products.0.sold': sold
               }
             },
-            { new: true },(err, updatedImport) => {
+            { new: true },
+            (err, updatedImport) => {
               if (err) {
                 console.error(err);
               } else {
                 console.log(updatedImport);
               }
             }
-          )
-        } 
+          );
+          break;
+        } else {
+          imports.push({
+            quantity: ip?._doc?.products[0]?._doc?.quantity - ip?._doc?.products[0]?._doc?.sold,
+            price: ip?._doc?.products[0]?._doc?.price
+          });
+          quantity -= ip?._doc?.products[0]?._doc?.quantity - ip?._doc?.products[0]?._doc?.sold;
+          Import.findOneAndUpdate(
+            { _id: ip?._id },
+            {
+              $set: {
+                'products.0.soldOut': true,
+                'products.0.sold': ip?._doc?.products[0]?._doc?.quantity
+              }
+            },
+            { new: true },
+            (err, updatedImport) => {
+              if (err) {
+                console.error(err);
+              } else {
+                console.log(updatedImport);
+              }
+            }
+          );
+        }
       }
-      products.push({ product: i.product, imports, color: i.color, quantity: i.quantity, price: i.price, sale: i.sale })
-    }
-    );
+      products.push({
+        product: i.product,
+        imports,
+        color: i.color,
+        quantity: i.quantity,
+        price: i.price,
+        sale: i.sale
+      });
+    });
     // checkQuantity(products)
     const status = [{ statusTimeline: 'Ordered', time: Date.now() }];
     const bill = new Bill({
@@ -1023,7 +1027,7 @@ const  Create = async (req, res, next) => {
       address,
       products,
       discountCode,
-      discountPrice:result_discount.value,
+      discountPrice: result_discount.value,
       ship,
       total,
       discount: reduce,
@@ -1058,10 +1062,10 @@ const  Create = async (req, res, next) => {
       }
       await session.commitTransaction();
       session.endSession();
-      // if (!!account.email) sender.SendMail(account.email, 'Tạo Đơn Hàng Thành Công', 'Mã đơn: ' + billDoc._id);
+      if (!!account.email) sender.SendMail(account.email, 'Tạo Đơn Hàng Thành Công', 'Mã đơn: ' + billDoc._id);
       console.log('================> ' + account.email);
-      // const newPhone = Phoneformat(phone);
-      // sender.SendSMS('Tạo Đơn Hàng Thành Công, Mã đơn: ' + billDoc._id, newPhone);
+      const newPhone = Phoneformat(phone);
+      sender.SendSMS('Tạo Đơn Hàng Thành Công, Mã đơn: ' + billDoc._id, newPhone);
       const ms_sc = 'Tạo Đơn Hàng Thành Công, Mã đơn: ' + billDoc._id;
       await Account.findByIdAndUpdate(bill.account._id.toString(), {
         $push: { notifications: { $each: [{ message: ms_sc }], $position: 0 } }
@@ -1424,38 +1428,34 @@ const CheckVNPay = async (req, res, next) => {
   }
 };
 
-const checkQuantity = async(products) =>{
-  ids = products.map(i=> i.product)
-  let listProduct = await Product.find({"_id":{$in:ids}})
+const checkQuantity = async (products) => {
+  ids = products.map((i) => i.product);
+  let listProduct = await Product.find({ _id: { $in: ids } });
   today = new Date();
-  let listNotifications = await Notification.find({$and:[
-      {createdAt: { $gte: today}},
-      {"type":false}
-    ]
-  })
-  for(let i = 0; i < listProduct.length; i++) {
-    let createNotification = true
+  let listNotifications = await Notification.find({ $and: [{ createdAt: { $gte: today } }, { type: false }] });
+  for (let i = 0; i < listProduct.length; i++) {
+    let createNotification = true;
     for (let index = 0; index < listNotifications.length; index++) {
-      if (!listNotifications[index].type && listNotifications[index].product.equals(listProduct[i]._id)){
-        createNotification =false
-        break
-      } 
+      if (!listNotifications[index].type && listNotifications[index].product.equals(listProduct[i]._id)) {
+        createNotification = false;
+        break;
+      }
     }
-    if(createNotification && listProduct[i]?.colors[0]?.quantity<quantityNotification){
+    if (createNotification && listProduct[i]?.colors[0]?.quantity < quantityNotification) {
       let notification = new Notification({
-        product:listProduct[i]?._id,
-        description: ("Sản phẩm "+ listProduct[i]?.name + " số lượng chỉ còn " + listProduct[i]?.color[0]?.quantity ),
-        status:false,
-        type:false,
-      })
-      try{
-        notification.save()
-      }catch(err){
-        throw err
+        product: listProduct[i]?._id,
+        description: 'Sản phẩm ' + listProduct[i]?.name + ' số lượng chỉ còn ' + listProduct[i]?.color[0]?.quantity,
+        status: false,
+        type: false
+      });
+      try {
+        notification.save();
+      } catch (err) {
+        throw err;
       }
     }
   }
-}
+};
 module.exports = {
   shipCalculate,
   Verity,
