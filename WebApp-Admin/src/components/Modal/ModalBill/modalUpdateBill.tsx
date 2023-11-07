@@ -15,6 +15,7 @@ export default function ModalUpdateBill({
     "Done",
     "Canceled",
   ];
+  debugger
   console.log(status);
   const [statusBill, setStatusBill] = useState(status);
   let idx = 0;
@@ -80,6 +81,9 @@ export default function ModalUpdateBill({
                           return <option value={i}>{i}</option>;
                         }
                     })}
+                    {status == "Ordered" && (
+                       <option value="Canceled">Canceled</option>
+                    )}
                   </select>
                 </div>
               </div>
