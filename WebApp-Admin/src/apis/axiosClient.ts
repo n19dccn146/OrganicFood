@@ -2,8 +2,8 @@ import axios, { AxiosRequestHeaders } from "axios";
 import { getFromLocalStorage } from "../helper/base.helpers";
 
 const axiosClient = axios.create({
-  // baseURL: "https://test1-1m9m.onrender  .com/api",
-  baseURL: "http://localhost:8000/api",
+  baseURL: "https://test1-1m9m.onrender.com/api",
+  // baseURL: "http://localhost:8000/api",
   headers: {
     "Content-Type": "application/json",
   },
